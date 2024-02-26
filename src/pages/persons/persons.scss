@@ -1,0 +1,61 @@
+.persons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgray;
+
+  h1 {
+    color: #091f06;
+  }
+
+  table {
+    border: 1px solid gray;
+    border-collapse: collapse;
+    text-align: center;
+    thead {
+      tr {
+        background-color: rgb(5, 69, 40);
+        text-align: center;
+
+        th {
+          border: 1px solid gray;
+          padding: 0.5rem 1rem;
+          color: white;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          border: 1px solid gray;
+          text-align: center;
+          padding: 0.5rem 1rem;
+
+          .action-btn {
+            padding: 0.25rem 1rem;
+            margin-left: 0.35rem;
+            border: none;
+            border-radius: 0.2rem;
+            background-color: rgb(16, 57, 11);
+            color: rgb(211, 210, 210);
+            font-weight: bold;
+            cursor: pointer;
+
+            &:last-child {
+              background-color: rgb(142, 10, 10);
+            }
+          }
+        }
+        .sname {
+          text-align: left;
+        }
+      }
+
+      .even-row {
+        background-color: #63765872;
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+.home {
+  display: flex;
+  justify-content: center;
+  background-color: lightgray;
+  height: calc(100vh - 5rem);
+
+  h1 {
+    font-size: 4rem;
+    color: #091f06;
+  }
+}
