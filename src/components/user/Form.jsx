@@ -1,0 +1,115 @@
+import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import api from "../../api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
+
+const Input = ({ name, label, value, type, fxn }) => {
+  return (
+    <div className="flex flex-col w-full">
+      <label htmlFor={name}>{label}</label>
+      <input
+        onChange={fxn}
+        type={type}
+        name={name}
+        id={name}
+        value={value}
+        className=" py-1 rounded-[0.35rem] px-2"
+      />
+    </div>
+  );
+};
+
+const Form = ({ route, kind }) => {
+  const [info, setInfo] = useState({
+    username: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
+  const type = kind === "login" ? "Login" : "Register";
+
+  const handleChange = (e) => {
+    setInfo({ ...info, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await api.post(route, info);
+      console.log(res.data);
+      if (kind === "login") {
+        localStorage.setItem(ACCESS_TOKEN, res.data.access);
+        localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+        localStorage.setItem("user", info.username);
+
+        navigate("/");
+      } else {
+        navigate("/login");
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  console.log(info);
+
+  return (
+    <div className="flex flex-col items-center gap-2 ">
+      <form
+        className="flex flex-col px-4 gap-6 items-center mt-12 w-[90vw] rounded-lg bg-gray-200  shadow-lg py-4 lg:w-[30vw]"
+        onSubmit={handleSubmit}
+      >
+        <h1 className="text-5xl font-bold text-blue-900">{type}</h1>
+        <Input
+          type="text"
+          name="username"
+          label="Username"
+          value={info.username}
+          fxn={handleChange}
+        />
+        <Input
+          type="password"
+          name="password"
+          label="Password"
+          value={info.password}
+          fxn={handleChange}
+        />
+
+        <button
+          type="submit"
+          className="bg-blue-900 text-white font-bold w-full rounded-md py-2 text-lg"
+        >
+          {type}
+        </button>
+
+        {kind === "login" ? (
+          <div className="flex flex-col items-center">
+            <span>Don't have account?</span>
+            <span
+              className="cursor-pointer font-bold"
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
+              SignUp
+            </span>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center">
+            <span>Have account?</span>
+            <span
+              className="cursor-pointer font-bold"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Login
+            </span>
+          </div>
+        )}
+      </form>
+    </div>
+  );
+};
+
+export default Form;
