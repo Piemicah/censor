@@ -1,16 +1,25 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import closeIcon from "../../assets/Icon_close.png";
 import burgerMenu from "../../assets/Icon_menu.png";
+import { AuthContext } from "../../context/AuthContext";
+import api from "../../api";
+import api2 from "../../api2";
 
 const Navbar = () => {
+  const { user } = useContext(AuthContext);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const handleLogout = () => {
-    navigate("/logout");
-  };
 
-  const user = localStorage.getItem("user");
+  const handleLogout = async () => {
+    try {
+      await api2.post("/api/logout/");
+      navigate("/login");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <>

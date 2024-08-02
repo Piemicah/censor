@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import api from "../../api";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
+import api2 from "../../api2";
+import { AuthContext } from "../../context/AuthContext";
 
 const Input = ({ name, label, value, type, fxn }) => {
   return (
@@ -20,6 +22,7 @@ const Input = ({ name, label, value, type, fxn }) => {
 };
 
 const Form = ({ route, kind }) => {
+  const { setIsAuthorized, setUser } = useContext(AuthContext);
   const [info, setInfo] = useState({
     username: "",
     password: "",
@@ -36,12 +39,15 @@ const Form = ({ route, kind }) => {
     e.preventDefault();
     try {
       const res = await api.post(route, info);
-      console.log(res.data);
-      if (kind === "login") {
-        localStorage.setItem(ACCESS_TOKEN, res.data.access);
-        localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-        localStorage.setItem("user", info.username);
 
+      if (kind === "login") {
+        await api2.post("/api/manage_tokens/", {
+          token: res.data.access,
+          refresh: res.data.refresh,
+          user: info.username,
+        });
+        setIsAuthorized(true);
+        setUser(info.username);
         navigate("/");
       } else {
         navigate("/login");
@@ -50,8 +56,6 @@ const Form = ({ route, kind }) => {
       alert(error);
     }
   };
-
-  console.log(info);
 
   return (
     <div className="flex flex-col items-center gap-2 ">

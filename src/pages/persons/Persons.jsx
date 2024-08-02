@@ -4,23 +4,11 @@ import { baseUrl } from "../../baseUrl";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar/Navbar";
 import api from "../../api";
+import useFetch from "../../hooks/useFetch";
 
 const Persons = () => {
-  const [persons, setPersons] = useState([]);
+  const { data: persons } = useFetch("/api/persons/");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchPersons();
-  }, []);
-
-  const fetchPersons = async () => {
-    try {
-      const res = await api.get("/api/persons/");
-      setPersons(res.data);
-    } catch (error) {
-      alert(error.message);
-    }
-  };
 
   function handleDetail(pid) {
     navigate("/list/" + pid);
